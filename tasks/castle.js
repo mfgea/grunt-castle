@@ -29,7 +29,7 @@ module.exports = function (grunt) {
     var mocha = new Mocha({ui: 'bdd'});
 
     // CODE COVERAGE REPORTING UTILS
-    function aggregate(results, result, spec) { // mocha json-cov reporter
+    function aggregate(results, result, spec, stripPath) { // mocha json-cov reporter
         // single file being tested
         results = results || {
             hits: 0,
@@ -38,11 +38,14 @@ module.exports = function (grunt) {
             files: []
         };
 
+
         // Only report for the file we're testing
         var fileResults = _.filter(result.files, function (f) {
             // Take the filename and remove repo (since test doesn't have a repo and .js
             // since the tests are .html
-            return spec.indexOf(f.filename.replace(/^repo\/|\.js$/ig, '')) !== -1;
+            var regexStr = '^'+stripPath.replace(/\/$/,'').replace(/\//g,'\\/')+'\/|\.js$';
+            var regex = new RegExp(regexStr,'gi');
+            return spec.indexOf(f.filename.replace(regex, '')) !== -1;
         });
 
         if (fileResults && fileResults.length) {
@@ -481,6 +484,7 @@ module.exports = function (grunt) {
 
         coverageClient: function (file, callback, lcov) {
             var options = this.options;
+
             var results;
             var count = 0;
             var files = [];
@@ -501,7 +505,7 @@ module.exports = function (grunt) {
                              } else {
                              results = aggregate(results, result, spec);
                              }*/
-                            results = aggregate(results, result, spec);
+                            results = aggregate(results, result, spec, options.reporting.stripPath);
                             count++;
                             if (count === specs.length) {
                                 if (lcov) {
@@ -638,7 +642,7 @@ module.exports = function (grunt) {
             var specs = grunt.file.expand(path.resolve(options.specs['client-target']) + '/**/*.html');
             var self = this;
 
-            async.eachSeries(specs, function (spec, callback) {
+            async.eachSeries(specs, function (spec) {
                 grunt.log.writeln('running client spec:' + spec);
                 var mocha = execFile('./node_modules/grunt-castle/node_modules/mocha-phantomjs/bin/mocha-phantomjs',
                     [spec, '-R', 'xunit'],

@@ -640,48 +640,73 @@ module.exports = function (grunt) {
         },
 
         xunitClient: function (file, callback) {
-            var options = this.options;
-            var results = [];
-            var files = [];
-            var specs = grunt.file.expand(path.resolve(options.specs['client-target']) + '/**/*.html');
+            var htmlSpecsPath = this.getHtmlSpecsPath();
             var self = this;
+            var files;
+            var options = this.options;
 
-            async.eachSeries(specs, function (spec) {
-                grunt.log.writeln('running client spec:' + spec);
-                var mocha = execFile('./node_modules/grunt-castle/node_modules/mocha-phantomjs/bin/mocha-phantomjs',
-                    [spec, '-R', 'xunit'],
-                    { maxBuffer: 10000 * 1024, cwd: '.' },
-                    function (error, stdout, stderr) {
-                        if (!error) {
-                            try {
-                                var parser = new xml2js.Parser();
-                                parser.parseString(stdout, function (err, result) {
-                                    results.push(result);
-                                });
+            this.writeClientSpecs(file, function () {
+                files = file ? ('/' + file + '.html') : '/**/*.html';
 
-                                if (results.length === specs.length) {
-                                    self.writeXunitResults(results, callback);
-                                }
-                                return callback();
-                            }
-                            catch (err) {
-                                return callback(err);
-                            }
-                        } else {
-                            grunt.log.error("error executing " + spec + " xunit report : " + error);
-                            grunt.log.error(stderr);
-                            return callback(error);
+                grunt.task.loadTasks('node_modules/grunt-castle/node_modules/grunt-mocha-phantom-istanbul/tasks');
+                grunt.config.set('mocha', {
+                    castleXunit: {
+                        src: (htmlSpecsPath + files),
+                        dest: options.reporting.xunitFile,
+                        options: {
+                            reporter: 'XUnit'
                         }
                     }
-                );
-            }, function (error) {
-                if (error) {
-                    grunt.log.error('error code: ' + error.code);
-                    grunt.log.error('error signal: ' + error.signal);
-                    process.exit(error.code || 1);
-                }
+                });
+                grunt.task.run('mocha:castleXunit');
+
+                callback();
             });
         },
+
+        //~ xunitClient: function (file, callback) {
+            //~ var options = this.options;
+            //~ var results = [];
+            //~ var files = [];
+            //~ var specs = grunt.file.expand(path.resolve(options.specs['client-target']) + '/**/*.html');
+            //~ var self = this;
+//~
+            //~ async.eachSeries(specs, function (spec) {
+                //~ grunt.log.writeln('running client spec:' + spec);
+                //~ var mocha = execFile('./node_modules/grunt-castle/node_modules/mocha-phantomjs/bin/mocha-phantomjs',
+                    //~ [spec, '-R', 'xunit'],
+                    //~ { maxBuffer: 10000 * 1024, cwd: '.' },
+                    //~ function (error, stdout, stderr) {
+                        //~ if (!error) {
+                            //~ try {
+                                //~ var parser = new xml2js.Parser();
+                                //~ parser.parseString(stdout, function (err, result) {
+                                    //~ results.push(result);
+                                //~ });
+//~
+                                //~ if (results.length === specs.length) {
+                                    //~ self.writeXunitResults(results, callback);
+                                //~ }
+                                //~ return callback();
+                            //~ }
+                            //~ catch (err) {
+                                //~ return callback(err);
+                            //~ }
+                        //~ } else {
+                            //~ grunt.log.error("error executing " + spec + " xunit report : " + error);
+                            //~ grunt.log.error(stderr);
+                            //~ return callback(error);
+                        //~ }
+                    //~ }
+                //~ );
+            //~ }, function (error) {
+                //~ if (error) {
+                    //~ grunt.log.error('error code: ' + error.code);
+                    //~ grunt.log.error('error signal: ' + error.signal);
+                    //~ process.exit(error.code || 1);
+                //~ }
+            //~ });
+        //~ },
         // END COVERAGE
 
         // I/O

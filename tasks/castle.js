@@ -383,20 +383,24 @@ module.exports = function (grunt) {
             var htmlSpecsPath = this.getHtmlSpecsPath();
             var self = this;
             var files;
+            var options = this.options;
 
             this.writeClientSpecs(file, function () {
                 files = file ? ('/' + file + '.html') : '/**/*.html';
 
-                grunt.task.loadTasks('node_modules/grunt-castle/node_modules/grunt-mocha/tasks');
+                grunt.task.loadTasks('node_modules/grunt-castle/node_modules/grunt-mocha-phantom-istanbul/tasks');
                 grunt.config.set('mocha', {
-                    client: {
+                    castleClient: {
                         src: (htmlSpecsPath + files),
                         options: {
-                            reporter: 'Spec'
+                            reporter: 'Spec',
+                            coverage: {
+                                coverageFile: options.reporting.coverageFile
+                            }
                         }
                     }
                 });
-                grunt.task.run('mocha:client');
+                grunt.task.run('mocha:castleClient');
 
                 callback();
             });

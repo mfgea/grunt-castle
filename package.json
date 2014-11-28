@@ -1,7 +1,7 @@
 {
     "name": "grunt-castle",
     "description": "requirejs client, server, and client-server unit testing",
-    "version": "0.4.5",
+    "version": "0.4.6",
     "homepage": "",
     "author": {
         "name": "Jason Strimpel",
@@ -41,34 +41,33 @@
     "scripts": {
         "test": "grunt test"
     },
-    "dependencies":{
-        "chai": "1.9.x",
-        "grunt": "0.4.x",
-        "mocha": "1.12.x",
-        "sinon-chai": "2.1.x",
-        "requirejs": "2.1.x",
-        "squirejs": "0.2.x",
-        "grunt-mocha": "0.4.x",
-        "handlebars": "1.0.12",
-        "should": "3.2.x",
-        "sinon-chai": "2.5.x",
-        "grunt-plato": "0.2.x",
-        "mocha-phantomjs": "3.3.x",
-        "jade": "0.27.x",
-        "lodash": "2.4.x",
-        "findup-sync": "0.1.x",
-        "xml2js": "0.4.x",
-        "xml": "0.0.x",
-        "sinon-built": "1.9.x",
-        "async": "0.7.x",
-        "xunit-file": "0.0.5"
-    },
-    "devDependencies": {
-        "grunt-contrib-jshint": "~0.6.0",
-        "grunt-contrib-clean": "~0.4.0",
-        "grunt-contrib-nodeunit": "~0.2.0",
-        "grunt": "~0.4.1"
-    },
+  "dependencies":{
+    "async": "0.7.x",
+    "chai": "1.9.x",
+    "findup-sync": "0.1.x",
+    "grunt": "0.4.x",
+    "grunt-mocha-phantom-istanbul": "^0.1.1",
+    "grunt-plato": "0.2.x",
+    "handlebars": "1.0.12",
+    "jade": "0.27.x",
+    "lodash": "2.4.x",
+    "mocha": "1.12.x",
+    "mocha-phantomjs": "3.3.x",
+    "requirejs": "2.1.x",
+    "should": "3.2.x",
+    "sinon-built": "1.9.x",
+    "sinon-chai": "2.5.x",
+    "squirejs": "0.2.x",
+    "xml": "0.0.x",
+    "xml2js": "0.4.x",
+    "xunit-file": "0.0.5"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt": "~0.4.1"
+  },
     "peerDependencies": {
         "grunt": "~0.4.1"
     },

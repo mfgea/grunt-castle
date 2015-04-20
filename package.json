@@ -43,7 +43,7 @@
     },
   "dependencies":{
     "async": "0.7.x",
-    "chai": "1.9.x",
+    "chai": "1.10.x",
     "findup-sync": "0.1.x",
     "grunt": "0.4.x",
     "grunt-mocha-phantom-istanbul": "^0.1.1",
